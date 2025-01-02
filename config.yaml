@@ -1,0 +1,31 @@
+# Game settings
+
+# Players
+
+player:
+    - human
+    - AI
+
+# Difficuly levels
+
+difficulty: 
+    - beginner
+    - intermediate
+    - expert
+    - champion
+
+# Models
+
+model_folder: /agents/game_models
+
+model_file:
+    beginnner: /beginner
+    intermediate: /intermediate
+    expert: /expert
+    champion: /champion
+
+hidden_units: 
+    beginner: 80
+    intermediate: 80
+    expert: 80
+    champion: 80
