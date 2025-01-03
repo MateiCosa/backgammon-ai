@@ -34,8 +34,8 @@ def args_train(args):
     lr = args.lr
 
     if model_type == 'nn':
-        model = TDGammon(input_units=input_units, hidden_units=hidden_units, lr=lr, lambda_=lambda_, seed=seed)
         env = gym.make('gym_backgammon:backgammon-v0', disable_env_checker=True) 
+        model = TDGammon(input_units=input_units, hidden_units=hidden_units, lr=lr, lambda_=lambda_, seed=seed, env = env)
     else:
         raise NotImplementedError
 

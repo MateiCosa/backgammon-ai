@@ -13,7 +13,7 @@ if __name__ == '__main__':
     parser_train.add_argument('--save_step', help='Save the model every n episodes/games', type=int, default=0)
     parser_train.add_argument('--episodes', help='Number of episodes/games', type=int, default=200000)
     parser_train.add_argument('--lr', help='Learning rate', type=float, default=1e-2)
-    parser_train.add_argument('--input_units', help='Input units', type=int, default=198)
+    parser_train.add_argument('--input_units', help='Input units', type=int, default=250)
     parser_train.add_argument('--hidden_units', help='Hidden units', type=int, default=40)
     parser_train.add_argument('--lambda_', help='Credit assignment parameter', type=float, default=0.7)
     parser_train.add_argument('--name', help='Name of the experiment', type=str, default='baseline')
