@@ -51,11 +51,12 @@ class RandomAgent(Agent):
 
 class TDAgent(Agent):
 
-    def __init__(self, color, model, n_ply=1):
+    def __init__(self, color, model, n_ply=1, train=True):
         super().__init__(color)
         self.name = f"TD({COLORS[color]})"
         self.model = model
         self.n_ply = n_ply
+        self.train = train
     
     def choose_action(self, actions, env):
         
@@ -70,9 +71,17 @@ class TDAgent(Agent):
         env.counter = 0
         init_state = env.game.save_state()
 
-        opponent_roll = self.roll_dice()
-        opponent_roll = (-opponent_roll[0], -opponent_roll[1])
-        # opponent_rolls = [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 3), (3, 4), (3, 5), (3, 6), (4, 4), (4, 5), (4, 6), (5, 5), (5, 6), (6, 6)]
+        if self.train:
+            opponent_roll = self.roll_dice()
+            opponent_roll = (-opponent_roll[0], -opponent_roll[1])
+        else:
+            opponent_dice = [(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 3), (3, 4), (3, 5), (3, 6), (4, 4), (4, 5), (4, 6), (5, 5), (5, 6), (6, 6)]
+            if self.roll_dice()[0] > 0:
+                for i, dice in enumerate(opponent_dice):
+                    opponent_dice[i] = (-dice[0], -dice[1])
+            prob_dice = 2 * np.ones(21)
+            prob_dice[[0, 6, 11, 15, 18, 20]] /= 2
+            prob_dice /= 36 
 
         best_response_reward = -np.inf if self.color == WHITE else np.inf
 
@@ -86,19 +95,33 @@ class TDAgent(Agent):
                 pass
                 
             elif self.n_ply == 2:
+
                 env.get_opponent_agent()
-                opponent_actions_list = env.get_valid_actions(opponent_roll) # get opponent's valid actions
-                for j, action in enumerate(opponent_actions_list):
-                    next_state, next_reward, next_done, next_info = env.step(action) # play action and receive feedback
-                    next_eval = self.model(next_state) # evaluate next postiion
-                    eval_arr[i] = min(eval_arr[i], next_eval) if self.color == WHITE else max(eval_arr[i], next_eval) # opponent chooses best response
-                    if self.color == WHITE:
-                        if best_response_reward > eval_arr[i]:
-                            break
-                    else:
-                        if best_response_reward < eval_arr[i]:
-                            break
-                    env.game.restore_state(prev_state) # revert to initial state
+
+                if self.train:
+                    opponent_actions_list = env.get_valid_actions(opponent_roll) # get opponent's valid actions
+                    for j, action in enumerate(opponent_actions_list):
+                        next_state, next_reward, next_done, next_info = env.step(action) # play action and receive feedback
+                        next_eval = self.model(next_state) # evaluate next postiion
+                        eval_arr[i] = min(eval_arr[i], next_eval) if self.color == WHITE else max(eval_arr[i], next_eval) # opponent chooses best response
+                        if self.color == WHITE:
+                            if best_response_reward > eval_arr[i]:
+                                break
+                        else:
+                            if best_response_reward < eval_arr[i]:
+                                break
+                        env.game.restore_state(prev_state) # revert to initial state
+                else:
+                    evals = np.zeros(21)
+                    for k, dice_roll in enumerate(opponent_dice):
+                        opponent_actions_list = env.get_valid_actions(dice_roll) # get opponent's valid actions
+                        for j, action in enumerate(opponent_actions_list):
+                            next_state, next_reward, next_done, next_info = env.step(action) # play action and receive feedback
+                            next_eval = self.model(next_state) # evaluate next postiion
+                            evals[k] = min(evals[k], next_eval) if self.color == WHITE else max(evals[k], next_eval) # opponent chooses best response
+                            env.game.restore_state(prev_state) # revert to initial state
+                    eval_arr[i] = np.dot(evals, prob_dice) # expected value of postion resulting from agent's action over every opponent dice roll
+
                 env.get_opponent_agent() # back to current agent's turn
 
             else:

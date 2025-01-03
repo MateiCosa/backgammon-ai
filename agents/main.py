@@ -6,7 +6,7 @@ def formatter(prog):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='TD-Gammon', formatter_class=lambda prog: formatter(prog))
-    subparsers = parser.add_subparsers(help='Train TD-Network | Evaluate Agent(s) | Plot Wins')
+    subparsers = parser.add_subparsers(help='Train TD-Network | Evaluate Agent(s)')
 
     parser_train = subparsers.add_parser('train', help='Train TD-Network', formatter_class=lambda prog: formatter(prog))
     parser_train.add_argument('--save_path', help='Save directory location', type=str, default=None)
@@ -26,18 +26,22 @@ if __name__ == '__main__':
     except Exception as error:
         print(f"{error}")
 
-    parser_gui = subparsers.add_parser('gui', help='Start GUI', formatter_class=lambda prog: formatter(prog))
-    parser_gui.add_argument('--host', help='Host running the web gui', default='localhost')
-    parser_gui.add_argument('--port', help='Port listening for command', default=8002, type=int)
-    parser_gui.add_argument('--model', help='Model used by the opponent', required=True, type=str)
-    parser_gui.add_argument('--hidden_units', help='Hidden units of the model loaded', required=False, type=int, default=40)
-    parser_gui.add_argument('--type', help='Model type', choices=['nn'], type=str, default='nn')
+    parser_eval = subparsers.add_parser('eval', help='Evaluate Agents', formatter_class=lambda prog: formatter(prog))
+    parser_eval.add_argument('--model1_type', help='Type of agent: nn or random', type=str, default='random')
+    parser_eval.add_argument('--model1_path', help='Path to model weights (only for nn)', type=str, default=None)
+    parser_eval.add_argument('--model1_n_ply', help='Number of plies used in position evaluation: 1 or 2', type=int, default=1)
+    parser_eval.add_argument('--model1_hidden_units', help='Number of hidden units (only for nn)', type=int, default=80)
+    parser_eval.add_argument('--model2_type', help='Type of agent: nn or random', type=str, default='random')
+    parser_eval.add_argument('--model2_path', help='Path to model weights (only for nn)', type=str, default=None)
+    parser_eval.add_argument('--model2_n_ply', help='Number of plies used in position evaluation: 1 or 2', type=int, default=1)
+    parser_eval.add_argument('--model2_hidden_units', help='Number of hidden units (only for nn)', type=int, default=80)
+    parser_eval.add_argument('--n_episodes', help='Number of episodes for evaluation run.', type=int, default=500)
 
     try:
-        parser_gui.set_defaults(func=utils.args_gui)
-    except Exception as erorr:
+        parser_eval.set_defaults(func=utils.args_eval)
+    except Exception as error:
         print(f"{error}")
-    
+
     args = parser.parse_args()
     args.func(args)
 
