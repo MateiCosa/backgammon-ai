@@ -13,6 +13,7 @@ difficulty:
     - intermediate
     - expert
     - champion
+    - custom
 
 # Models
 
@@ -23,9 +24,25 @@ model_file:
     intermediate: /intermediate
     expert: /expert
     champion: /champion
+    custom: /custom
+
+input_units:
+    beginner: 198
+    intermediate: 198
+    expert: 250
+    champion: 250
+    custom: 198
 
 hidden_units: 
     beginner: 80
     intermediate: 80
     expert: 80
     champion: 80
+    custom: 80
+
+n_ply:
+    beginner: 1
+    intermediate: 1
+    expert: 1
+    champion: 2
+    custom: 1

@@ -11,8 +11,7 @@ if __name__ == '__main__':
     parser.add_argument('--host', help='Host running the web gui.', default='localhost')
     parser.add_argument('--port', help='Port listening for command.', default=8002, type=int)
     parser.add_argument('--difficulty', help='Determines the model used by the opponent. Accepted options are: beginner, intermediate, expert, champion.', default='intermediate', type=str)
-    parser.add_argument('--first_player', help='First player: random, human or AI.', default='random', type=str)
-
+    
     try:
         parser.set_defaults(func=args_gui)
     except Exception as error:

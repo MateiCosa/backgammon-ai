@@ -1,0 +1,28 @@
+save_path=./trained_models/v2
+command_line_args=Namespace(save_path='./trained_models/v2', save_step=10000, episodes=150000, lr=0.1, input_units=250, hidden_units=80, lambda_=0.7, name='v2', type='nn', seed=0, n_ply=1, func=<function args_train at 0x1022b2e80>)
+type=nn
+input_units=250
+hidden_units=80
+alpha=0.1
+lambda_=0.7
+n_episodes=150000
+save_step=10000
+run_name=v2
+env=backgammon-v0
+seed=0
+modules=[TDGammon(
+  (hidden): Sequential(
+    (0): Linear(in_features=250, out_features=80, bias=True)
+    (1): Sigmoid()
+  )
+  (output): Sequential(
+    (0): Linear(in_features=80, out_features=1, bias=True)
+    (1): Sigmoid()
+  )
+), Sequential(
+  (0): Linear(in_features=250, out_features=80, bias=True)
+  (1): Sigmoid()
+), Linear(in_features=250, out_features=80, bias=True), Sigmoid(), Sequential(
+  (0): Linear(in_features=80, out_features=1, bias=True)
+  (1): Sigmoid()
+), Linear(in_features=80, out_features=1, bias=True), Sigmoid()]

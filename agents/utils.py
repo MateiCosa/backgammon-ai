@@ -41,8 +41,8 @@ def args_train(args):
     lr = args.lr
 
     if model_type == 'nn':
-        model = TDGammon(input_units=input_units, hidden_units=hidden_units, lr=lr, lambda_=lambda_, seed=seed)
         env = gym.make('gym_backgammon:backgammon-v0', disable_env_checker=True) 
+        model = TDGammon(input_units=input_units, hidden_units=hidden_units, lr=lr, lambda_=lambda_, seed=seed, env = env)
     else:
         raise NotImplementedError
 
@@ -61,13 +61,17 @@ def args_train(args):
 def args_eval(args):
 
     # parameters
+    model1_name = args.model1_name
     model1_type = args.model1_type
     model1_path = args.model1_path
     model1_n_ply = args.model1_n_ply
+    model1_input_units = args.model1_input_units
     model1_hidden_units = args.model1_hidden_units
+    model2_name = args.model2_name
     model2_type = args.model2_type
     model2_path = args.model2_path
     model2_n_ply = args.model2_n_ply
+    model2_input_units = args.model2_input_units
     model2_hidden_units = args.model2_hidden_units
     n_episodes = args.n_episodes
 
@@ -81,17 +85,17 @@ def args_eval(args):
     if model1_type == 'random':
         black_agent = RandomAgent(BLACK)
     else:
-        model1 = TDGammon(hidden_units=model1_hidden_units, lr=0.1, lambda_=0.7) # initialize model
+        model1 = TDGammon(input_units=model1_input_units, hidden_units=model1_hidden_units, lr=0.1, lambda_=0.7, env=env) # initialize model
         model1.load(snapshot_path=CWD+model1_path) # load the weights
-        black_agent = TDAgent(BLACK, model = model1, n_ply=model1_n_ply, train=False) # initialize the agent
+        black_agent = TDAgent(BLACK, name=model1_name, model = model1, n_ply=model1_n_ply, train=False) # initialize the agent
 
     if model2_type == 'random':
         white_agent = RandomAgent(WHITE)
     else:
-        model2 = TDGammon(hidden_units=model2_hidden_units, lr=0.1, lambda_=0.7) # initialize model
+        model2 = TDGammon(input_units=model2_input_units, hidden_units=model2_hidden_units, lr=0.1, lambda_=0.7, env=env) # initialize model
         model2.load(snapshot_path=CWD+model2_path) # load the weights
-        white_agent = TDAgent(WHITE, model = model2, n_ply=model2_n_ply, train=False) # initialize the agent
+        white_agent = TDAgent(WHITE, name=model2_name, model = model2, n_ply=model2_n_ply, train=False) # initialize the agent
 
     agents = {BLACK: black_agent, WHITE: white_agent}
 
-    score = evaluate_agents(agents=agents, env=env, n_episodes=n_episodes)
+    evaluate_agents(agents=agents, env=env, n_episodes=n_episodes)

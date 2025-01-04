@@ -73,4 +73,3 @@ def evaluate_agents(agents, env, n_episodes):
     print(f"Average game length: {average_game_length} plays | Total Duration: {total_duration}")
 
     return score
-

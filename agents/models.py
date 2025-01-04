@@ -16,6 +16,8 @@ from eval import evaluate_agents, MAX_PLAYS
 
 torch.set_default_tensor_type('torch.DoubleTensor')
 
+BASE_INPUT_FEATURES = 198 # standard td-gammon board encoding
+
 class TDBackbone(nn.Module):
 
     def __init__(self, lr, lambda_,  seed=0):
@@ -132,7 +134,7 @@ class TDBackbone(nn.Module):
         self.load_state_dict(snapshot['model_state_dict'])
 
 class TDGammon(TDBackbone):
-    def __init__(self, lr, lambda_, seed=0, input_units=198, hidden_units=40, output_units=1):
+    def __init__(self, lr, lambda_, seed=0, input_units=198, hidden_units=80, output_units=1, env = None):
 
         super(TDGammon, self).__init__(lr, lambda_, seed=seed)
 
@@ -149,7 +151,67 @@ class TDGammon(TDBackbone):
         for p in self.parameters():
             nn.init.zeros_(p)
         
+        self.env = env
+        self.extra_features = (input_units > BASE_INPUT_FEATURES)
+
+    def blot_exposure(self):
+
+        white_target, black_target= 0, 0
+        board, bar = self.env.game.board, self.env.game.bar
+
+        for dice in range(1, 7):
+
+            found = False
+            point = 0
+            if bar[BLACK] > 0 and board[dice - 1] == (1, WHITE):
+                white_target += 1
+                found = True
+            while not found and point < 24:
+                if board[point] == (1, WHITE) and board[point - dice][1] == BLACK:
+                    white_target += 1
+                    found = True
+                    continue
+                point += 1
+
+            found = False
+            point = 0
+            if bar[WHITE] > 0 and board[24 - dice] == (1, BLACK):
+                black_target += 1
+                found = True
+            while not found and point < 24:
+                if board[point - dice] == (1, BLACK) and board[point][1] == WHITE:
+                    black_target += 1
+                    found = True
+                    continue
+                point += 1
+
+        return [(12-white_target)*white_target/36, (12 - black_target)*black_target/36]
+    
+    def blockade_strength(self):
+        board = self.env.game.board
+        bar = self.env.game.bar
+        white_counter = [0]*25
+        black_counter = [0]*25
+        for dice in range(1, 7):
+            if bar[WHITE] > 0 and board[24 - dice][1] == BLACK and board[24 - dice][0] > 1:
+                white_counter[-1] += 1/6
+            if bar[BLACK] > 0 and board[dice - 1][1] == WHITE and board[24 - dice][0] > 1:
+                black_counter[-1] += 1/6
+            for point in range(dice, 24):
+                if board[point][1] == WHITE and board[point - dice] == BLACK:
+                    if board[point][0] > 1:
+                        black_counter[point - dice] += 1/6
+                    if board[point][0] > 1:
+                        white_counter[point] += 1/6
+        return white_counter, black_counter
+            
     def forward(self, x):
+
+        if self.extra_features: # include extra features
+            exposure = self.blot_exposure()
+            white_counter, black_counter = self.blockade_strength()
+            x = x + exposure + white_counter + black_counter
+
         x = torch.from_numpy(np.array(x))
         x = self.hidden(x)
         x = self.output(x)

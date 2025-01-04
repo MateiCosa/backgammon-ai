@@ -1,1 +1,1 @@
-python3 main.py eval --model1_type nn --model1_path "/trained_models/v1/v1_20250101_0329_20_551791_150000.zip" --model1_n_ply 2 --model2_type nn --model2_path /trained_models/v0/v0_20241224_2034_54_350209_150000.zip
+python3 main.py eval --n_episodes 200 --model1_name v2/2ply --model1_type nn --model1_path /trained_models/v2/v2_20250103_2322_55_092095_150000.zip --model1_input_units 250 --model1_n_ply 2 --model2_name v2 --model2_type nn --model2_path /trained_models/v2/v2_20250103_2322_55_092095_150000.zip --model2_input_units 250

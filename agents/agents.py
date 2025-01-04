@@ -51,9 +51,12 @@ class RandomAgent(Agent):
 
 class TDAgent(Agent):
 
-    def __init__(self, color, model, n_ply=1, train=True):
+    def __init__(self, color, model, name = "", n_ply=1, train=True):
         super().__init__(color)
-        self.name = f"TD({COLORS[color]})"
+        if name:
+            self.name = f"TD({name + '-' + COLORS[color]})"
+        else:
+            self.name = f"TD({COLORS[color]})"
         self.model = model
         self.n_ply = n_ply
         self.train = train
