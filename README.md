@@ -111,15 +111,15 @@ The optimized calculation is performed using the `blot_exposure` function. This 
 
 ### Feature 2: Blockade Strength
 
-** Definition **
+**Definition**
 Blockade strength quantifies the difficulty of moving from a specific point on the board due to blocked paths. Originally, this measure involved analyzing the dice combinations that do not result in valid plays from a given point.
 
-** Optimization **
+**Optimization**
 Similar to blot exposure, we simplified this measure to consider only single dice rolls. For each dice roll, we check whether it is possible to move from a given point. The result is a probability measure for each point on the board, indicating how often that point is effectively blocked. This computation is performed independently for both players.
 
 The optimized feature results in 25 additional values per player, representing the blockade probabilities for each point on the board. These values are computed using the `blockade_strength` function, which aggregates the probabilities based on single dice rolls.
 
-** Implementation **
+**Implementation**
 The `blockade_strength` function iterates through the board and computes the probabilities for each point using single dice rolls. This streamlined approach avoids the need to evaluate combinations of dice rolls, significantly reducing computational complexity.
 
 ---
@@ -140,7 +140,7 @@ The `blockade_strength` function iterates through the board and computes the pro
 
 ---
 
-№## Conclusion
+### Conclusion
 
 The redefinition of *Blot Exposure* and *Blockade Strength* represents a significant step toward efficient feature engineering for backgammon neural network models. These features strike a balance between computational efficiency and informational richness, making them invaluable for large-scale training and inference. Future work could explore further refinements and assess their impact on model performance in competitive settings.
 
