@@ -92,10 +92,10 @@ Backgammon, as a board game, provides a challenging environment for developing n
 
 ### Feature 1: Blot Exposure
 
-** Definition: **
+**Definition:**
 Blot exposure measures the vulnerability of a single checker (blot) on the board to being hit by an opponent. Traditionally, it is defined as the number of dice combinations (out of 36) that allow the opponent to hit a blot. Calculating this measure requires analyzing all 21 possible dice pairs and invoking the `get_valid_plays` method for each pair, which incurs a significant computational cost.
 
-** Optimization **
+**Optimization**
 To mitigate the computational burden, we redefined blot exposure to consider only single dice rolls. This simplification eliminates the need to evaluate all dice pairs and reduces computation to a single board scan. For each dice roll, we check if there is a blot exposed to attack. If the total number of such dice rolls is \( x \), the feature value is calculated as:
 
 $$
@@ -104,17 +104,17 @@ $$
 
 This measure is computed separately for both players, resulting in two additional features. Despite the simplification, we observed a high correlation between this approximation and the original definition of blot exposure.
 
-** Implementation **
+**Implementation**
 The optimized calculation is performed using the `blot_exposure` function. This function efficiently scans the board for vulnerable blots based on single dice rolls and computes the feature values directly.
 
 ---
 
 ### Feature 2: Blockade Strength
 
-**Definition**
+**Definition:**
 Blockade strength quantifies the difficulty of moving from a specific point on the board due to blocked paths. Originally, this measure involved analyzing the dice combinations that do not result in valid plays from a given point.
 
-**Optimization**
+**Optimization:**
 Similar to blot exposure, we simplified this measure to consider only single dice rolls. For each dice roll, we check whether it is possible to move from a given point. The result is a probability measure for each point on the board, indicating how often that point is effectively blocked. This computation is performed independently for both players.
 
 The optimized feature results in 25 additional values per player, representing the blockade probabilities for each point on the board. These values are computed using the `blockade_strength` function, which aggregates the probabilities based on single dice rolls.
