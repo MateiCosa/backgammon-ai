@@ -84,47 +84,47 @@ The idea of 2-ply evaluation means considering not only the evaluation of the po
 Performing full-fledged 2-ply search is, however, a great way to improve the performance of any trained model. With every move taking under a second, it does not greatly affected the enjoyment of gameplay. Therefore, in evaluation mode one can take the already learned model and use it to evaluate all possible outcomes within the next two moves, selecting the best one in expectation.
 
 
-# Additional Features Derived for Neural Network Models for Backgammon
+## Additional Features Derived for Neural Network Models for Backgammon
 
 Backgammon, as a board game, provides a challenging environment for developing neural network models due to its probabilistic and strategic nature. To enhance the performance of our models, we devised additional features that encapsulate key aspects of the game's state. These features focus on two strategic measures, *Blot Exposure* and *Blockade Strength*, which were redefined to optimize computational efficiency without significant loss of information.
 
 ---
 
-## Feature 1: Blot Exposure
+### Feature 1: Blot Exposure
 
-### Definition
+** Definition: **
 Blot exposure measures the vulnerability of a single checker (blot) on the board to being hit by an opponent. Traditionally, it is defined as the number of dice combinations (out of 36) that allow the opponent to hit a blot. Calculating this measure requires analyzing all 21 possible dice pairs and invoking the `get_valid_plays` method for each pair, which incurs a significant computational cost.
 
-### Optimization
+** Optimization **
 To mitigate the computational burden, we redefined blot exposure to consider only single dice rolls. This simplification eliminates the need to evaluate all dice pairs and reduces computation to a single board scan. For each dice roll, we check if there is a blot exposed to attack. If the total number of such dice rolls is \( x \), the feature value is calculated as:
 
-\[
+$$
 \text{Blot Exposure} = \frac{(12 - x) \cdot x}{36}
-\]
+$$
 
 This measure is computed separately for both players, resulting in two additional features. Despite the simplification, we observed a high correlation between this approximation and the original definition of blot exposure.
 
-### Implementation
+** Implementation **
 The optimized calculation is performed using the `blot_exposure` function. This function efficiently scans the board for vulnerable blots based on single dice rolls and computes the feature values directly.
 
 ---
 
-## Feature 2: Blockade Strength
+### Feature 2: Blockade Strength
 
-### Definition
+** Definition **
 Blockade strength quantifies the difficulty of moving from a specific point on the board due to blocked paths. Originally, this measure involved analyzing the dice combinations that do not result in valid plays from a given point.
 
-### Optimization
+** Optimization **
 Similar to blot exposure, we simplified this measure to consider only single dice rolls. For each dice roll, we check whether it is possible to move from a given point. The result is a probability measure for each point on the board, indicating how often that point is effectively blocked. This computation is performed independently for both players.
 
 The optimized feature results in 25 additional values per player, representing the blockade probabilities for each point on the board. These values are computed using the `blockade_strength` function, which aggregates the probabilities based on single dice rolls.
 
-### Implementation
+** Implementation **
 The `blockade_strength` function iterates through the board and computes the probabilities for each point using single dice rolls. This streamlined approach avoids the need to evaluate combinations of dice rolls, significantly reducing computational complexity.
 
 ---
 
-## Advantages of the Optimized Features
+##№ Advantages of the Optimized Features
 
 1. **Reduced Computational Overhead**  
    The optimized features eliminate the need for invoking computationally expensive methods like `get_valid_plays` for multiple dice pairs. This reduces the average game simulation time from 5 seconds to approximately 0.3 seconds.
@@ -140,7 +140,7 @@ The `blockade_strength` function iterates through the board and computes the pro
 
 ---
 
-## Conclusion
+№## Conclusion
 
 The redefinition of *Blot Exposure* and *Blockade Strength* represents a significant step toward efficient feature engineering for backgammon neural network models. These features strike a balance between computational efficiency and informational richness, making them invaluable for large-scale training and inference. Future work could explore further refinements and assess their impact on model performance in competitive settings.
 
