@@ -2,11 +2,16 @@
 <html lang="en">
 
 <head>
-    <meta http-equiv="Content-Security-Policy"
-        content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'">
+    <!-- <meta http-equiv="Content-Security-Policy"
+        content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'"> -->
     <meta charset="UTF-8">
     <title>Backgammon GUI</title>
+    <!-- <link rel="stylesheet" href="dice.css"> -->
     <style>
+        @import url('dice.css');
+    </style>
+
+    <!-- <style>
         #canvas-container {
             width: 80%;
             text-align: center;
@@ -49,7 +54,7 @@
         }
 
 
-    </style>
+    </style> -->
 </head>
 
 <body onload="init()">
@@ -71,6 +76,88 @@
         <button onclick="execute_action()" id='button-execute'>EXECUTE</button>
     </div>
 
+    <!-- Dice Section -->
+    <div class="game">
+
+        <div class="container">
+                <div id='dice1' class="dice dice-one">
+                    <div id="dice-one-side-one" class='side one'>
+                        <div class="dot one-1"></div>
+                    </div>
+                    <div id="dice-one-side-two" class='side two'>
+                        <div class="dot two-1"></div>
+                        <div class="dot two-2"></div>
+                    </div>
+                    <div id="dice-one-side-three" class='side three'>
+                        <div class="dot three-1"></div>
+                        <div class="dot three-2"></div>
+                        <div class="dot three-3"></div>
+                    </div>
+                    <div id="dice-one-side-four" class='side four'>
+                        <div class="dot four-1"></div>
+                        <div class="dot four-2"></div>
+                        <div class="dot four-3"></div>
+                        <div class="dot four-4"></div>
+                    </div>
+                    <div id="dice-one-side-five" class='side five'>
+                        <div class="dot five-1"></div>
+                        <div class="dot five-2"></div>
+                        <div class="dot five-3"></div>
+                        <div class="dot five-4"></div>
+                        <div class="dot five-5"></div>
+                    </div>
+                    <div id="dice-one-side-six" class='side six'>
+                        <div class="dot six-1"></div>
+                        <div class="dot six-2"></div>
+                        <div class="dot six-3"></div>
+                        <div class="dot six-4"></div>
+                        <div class="dot six-5"></div>
+                        <div class="dot six-6"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div id='dice2' class="dice dice-two">
+                    <div id="dice-two-side-one" class='side one'>
+                        <div class="dot one-1"></div>
+                    </div>
+                    <div id="dice-two-side-two" class='side two'>
+                        <div class="dot two-1"></div>
+                        <div class="dot two-2"></div>
+                    </div>
+                    <div id="dice-two-side-three" class='side three'>
+                        <div class="dot three-1"></div>
+                        <div class="dot three-2"></div>
+                        <div class="dot three-3"></div>
+                    </div>
+                    <div id="dice-two-side-four" class='side four'>
+                        <div class="dot four-1"></div>
+                        <div class="dot four-2"></div>
+                        <div class="dot four-3"></div>
+                        <div class="dot four-4"></div>
+                    </div>
+                    <div id="dice-two-side-five" class='side five'>
+                        <div class="dot five-1"></div>
+                        <div class="dot five-2"></div>
+                        <div class="dot five-3"></div>
+                        <div class="dot five-4"></div>
+                        <div class="dot five-5"></div>
+                    </div>
+                    <div id="dice-two-side-six" class='side six'>
+                        <div class="dot six-1"></div>
+                        <div class="dot six-2"></div>
+                        <div class="dot six-3"></div>
+                        <div class="dot six-4"></div>
+                        <div class="dot six-5"></div>
+                        <div class="dot six-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div id='roll' class='roll-button'><button>Roll dice!</button></div> -->
+    </div>
+
+    <script src="dice.js"></script>
 
 <script>
     let c = document.getElementById("boardCanvas");
@@ -196,57 +283,57 @@
         ctx.stroke()
 
         // TOP LEFT POINTS
-        // for (i = 0; i < 6; i++) {
-        //     ctx.beginPath();
-        //     ctx.moveTo(border + i * point_width, border);
-        //     ctx.lineTo(border + i * point_width + (point_width / 2), point_heigth);
-        //     ctx.lineTo(border + (i + 1) * point_width, border);
-        //     if (i % 2 == 0) {
-        //         ctx.fillStyle = COLOR1;
-        //     } else {
-        //         ctx.fillStyle = COLOR2;
-        //     }
-        //     ctx.fill();
-        //     ctx.stroke()
-        //     ctx.fillStyle = 'black';
-        //     ctx.fillText(12 + i + 1, border + i * point_width + 5, border - 5);
+        for (i = 0; i < 6; i++) {
+            ctx.beginPath();
+            ctx.moveTo(border + i * point_width, border);
+            ctx.lineTo(border + i * point_width + (point_width / 2), point_heigth);
+            ctx.lineTo(border + (i + 1) * point_width, border);
+            if (i % 2 == 0) {
+                ctx.fillStyle = COLOR1;
+            } else {
+                ctx.fillStyle = COLOR2;
+            }
+            ctx.fill();
+            ctx.stroke()
+            ctx.fillStyle = 'black';
+            ctx.fillText(12 + i, border + i * point_width + 5, border - 5);
 
-        // }
+        }
 
         const triangles = [];
         
-        // Draw triangles
-        for (let i = 0; i < 6; i++) {
-            ctx.beginPath();
-            const x1 = border + i * point_width;
-            const x2 = x1 + (point_width / 2);
-            const x3 = border + (i + 1) * point_width;
-            const y1 = border;
-            const y2 = point_heigth;
+        // // Draw triangles
+        // for (let i = 0; i < 6; i++) {
+        //     ctx.beginPath();
+        //     const x1 = border + i * point_width;
+        //     const x2 = x1 + (point_width / 2);
+        //     const x3 = border + (i + 1) * point_width;
+        //     const y1 = border;
+        //     const y2 = point_heigth;
 
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.lineTo(x3, y1);
-            ctx.closePath();
-            ctx.fillStyle = i % 2 === 0 ? COLOR1 : COLOR2;
-            ctx.fill();
-            ctx.stroke();
+        //     ctx.moveTo(x1, y1);
+        //     ctx.lineTo(x2, y2);
+        //     ctx.lineTo(x3, y1);
+        //     ctx.closePath();
+        //     ctx.fillStyle = i % 2 === 0 ? COLOR1 : COLOR2;
+        //     ctx.fill();
+        //     ctx.stroke();
 
-            triangles.push({ x1, y1, x2, y2, x3, y1, index: 12 + i + 1 });
-        }
+        //     triangles.push({ x1, y1, x2, y2, x3, y1, index: 12 + i + 1 });
+        // }
 
-        // Detect clicks
-        c.addEventListener("click", (event) => {
-            const rect = c.getBoundingClientRect();
-            const mouseX = event.clientX - rect.left;
-            const mouseY = event.clientY - rect.top;
+        // // Detect clicks
+        // c.addEventListener("click", (event) => {
+        //     const rect = c.getBoundingClientRect();
+        //     const mouseX = event.clientX - rect.left;
+        //     const mouseY = event.clientY - rect.top;
 
-            for (const triangle of triangles) {
-                if (isPointInTriangle(mouseX, mouseY, triangle)) {
-                    alert(`Triangle ${triangle.index} clicked`);
-                }
-            }
-        });
+        //     for (const triangle of triangles) {
+        //         if (isPointInTriangle(mouseX, mouseY, triangle)) {
+        //             alert(`Triangle ${triangle.index} clicked`);
+        //         }
+        //     }
+        // });
 
         // TOP RIGHT POINTS
         for (i = 0; i < 6; i++) {
@@ -263,7 +350,7 @@
             ctx.fill();
             ctx.stroke()
             ctx.fillStyle = 'black';
-            ctx.fillText(18 + i + 1, half_board_rigth_start + i * point_width + 5, border - 5);
+            ctx.fillText(18 + i, half_board_rigth_start + i * point_width + 5, border - 5);
         }
 
         // BOTTOM LEFT POINTS
@@ -281,11 +368,12 @@
             ctx.fill();
             ctx.stroke()
             ctx.fillStyle = 'black';
-            if (11 - i < 10){
-                ctx.fillText(11 - i + 1, border + i * point_width + 15, height - border + 25);
-            } else {
-                ctx.fillText(11 - i + 1, border + i * point_width + 5, height - border + 25);
-            }
+            ctx.fillText(11 - i, border + i * point_width + 15, height - border + 25);
+            // if (11 - i < 10){
+            //     ctx.fillText(11 - i + 1, border + i * point_width + 15, height - border + 25);
+            // } else {
+            //     ctx.fillText(11 - i + 1, border + i * point_width + 5, height - border + 25);
+            // }
         }
 
         // BOTTOM RIGHT POINTS
@@ -302,7 +390,7 @@
             ctx.fill();
             ctx.stroke()
             ctx.fillStyle = 'black';
-            ctx.fillText(5 - i + 1, half_board_rigth_start + i * point_width + 15, height - border + 25);
+            ctx.fillText(5 - i, half_board_rigth_start + i * point_width + 15, height - border + 25);
 
         }
     }
@@ -500,10 +588,15 @@
 
         actions = data['actions']
         state = data['state']
+        const roll = data['roll']
 
         board = state[0]
         bar = state[1]
         off = state[2]
+
+        if (roll) {
+            rollDice([Math.floor(roll[0]), Math.floor(roll[1])])
+        }
         
         // UPDATE DataList, History and Hint
         document.getElementById("history").value = document.getElementById("history").value + '\n' +data['message']

@@ -3,3 +3,6 @@ td-gammon
 gym-backgammon
 bgenv
 .DS_Store
+agents/trained_models/v3
+agents/trained_models/baseline
+src

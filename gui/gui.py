@@ -45,9 +45,9 @@ class Handler(BaseHTTPRequestHandler):
 
         return response
 
-    def _set_headers(self, response=200):
+    def _set_headers(self, content_type = 'text/html', response=200):
         self.send_response(response)
-        self.send_header('Content-type', 'text/html')
+        self.send_header('Content-type', content_type)
         self.end_headers()
 
     def do_POST(self):
@@ -69,6 +69,19 @@ class Handler(BaseHTTPRequestHandler):
 
             # RESET THE STATE EVERY TIME A NEW PAGE IS REFRESHED
             self.server.reset()
+
+            self.wfile.write(bytes(f, encoding='utf-8'))
+
+        if self.path == '/dice.css':
+            self._set_headers(content_type= 'text/css')
+            
+            f = open( CWD + "/gui/dice.css").read()
+
+            self.wfile.write(bytes(f, encoding='utf-8'))
+        if self.path == '/dice.js':
+            self._set_headers(content_type = 'text/javascript')
+            
+            f = open( CWD + "/gui/dice.js").read()
 
             self.wfile.write(bytes(f, encoding='utf-8'))
 
