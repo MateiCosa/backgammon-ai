@@ -124,7 +124,7 @@ The `blockade_strength` function iterates through the board and computes the pro
 
 ---
 
-##№ Advantages of the Optimized Features
+### Advantages of the Optimized Features
 
 1. **Reduced Computational Overhead**  
    The optimized features eliminate the need for invoking computationally expensive methods like `get_valid_plays` for multiple dice pairs. This reduces the average game simulation time from 5 seconds to approximately 0.3 seconds.
