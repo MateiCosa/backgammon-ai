@@ -6,10 +6,14 @@ var elComeOut       = document.getElementById('roll');
 
 function rollDice(roll) {
 
+//   console.log('Dices received:', roll);
 //   var diceOne   = Math.floor((Math.random() * 6) + 1);
 //   var diceTwo   = Math.floor((Math.random() * 6) + 1);
 
-  const [diceOne, diceTwo] = roll;
+//   const [diceOne, diceTwo] = roll;
+  diceOne = roll[0]
+  diceTwo = roll[1]
+  console.log('Rolling dice:', diceOne, diceTwo);
  
   console.log(diceOne + ' ' + diceTwo);
 
@@ -26,5 +30,5 @@ function rollDice(roll) {
       elDiceTwo.classList.add('show-' + k);
     }
   } 
-  setTimeout(rollDice(), 1000);
+//   setTimeout(rollDice, 1000);
 }

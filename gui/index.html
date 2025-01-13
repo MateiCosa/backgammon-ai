@@ -585,18 +585,23 @@
 
     function update(data){
         console.log(data['message'])
+        message = data['message']
 
         actions = data['actions']
         state = data['state']
-        const roll = data['roll']
+        // roll = data['roll']
+        let rollMatch = message.match(/Roll=\(np\.int64\((\d+)\), np\.int64\((\d+)\)\)/);
+        let roll = null;
+        if (rollMatch) {
+            roll = [parseInt(rollMatch[1]), parseInt(rollMatch[2])];
+            console.log("The roll from regex is:", roll);  // Output: [1, 4]
+        }
+        console.log("Check roll:", roll)
 
         board = state[0]
         bar = state[1]
         off = state[2]
 
-        if (roll) {
-            rollDice([Math.floor(roll[0]), Math.floor(roll[1])])
-        }
         
         // UPDATE DataList, History and Hint
         document.getElementById("history").value = document.getElementById("history").value + '\n' +data['message']
@@ -617,7 +622,7 @@
                 });
                 options += '<option value="'+moves.slice(0, -1)+'" />';
 
-                var node = document.createElement("li");  
+                var node = document.createElement("li");
                 var buttonNode = document.createElement('button');
                 buttonNode.innerHTML = moves.slice(0, -1);
                 buttonNode.onclick = function() { 
@@ -635,6 +640,9 @@
                 buttonNode.innerHTML = action;
                 buttonNode.onclick = function() { 
                     document.getElementById("action-choice").value = buttonNode.innerHTML;
+                    if (action === 'roll'){
+                        rollDice(roll)
+                    }
                     execute_action()
                 };
                 node.appendChild(buttonNode); 

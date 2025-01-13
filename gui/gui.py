@@ -155,7 +155,7 @@ class GUI:
                 agent_color = self.server.env.get_opponent_agent()
                 self.server.agent = self.server.agents[agent_color]
 
-        return {'message': message, 'state': self.server.env.game.state, 'actions': list(commands)}
+        return {'message': message, 'state': self.server.env.game.state, 'actions': list(commands), 'roll': self.server.roll}
 
     def handle_roll(self):
         message = ''
@@ -179,6 +179,7 @@ class GUI:
 
         else:
             self.server.roll = self.server.agent.roll_dice()
+
             message += "{} | Roll={} | Run 'move (src/target)'\n".format(COLORS[self.server.agent.color], (abs(self.server.roll[0]), abs(self.server.roll[1])))
             actions = self.server.env.get_valid_actions(self.server.roll)
             commands.extend(list(actions))
@@ -207,7 +208,7 @@ class GUI:
                     self.server.roll = None
                     commands.extend(['roll', 'new game'])
 
-        return {'message': message, 'state': self.server.env.game.state, 'actions': list(commands)}
+        return {'message': message, 'state': self.server.env.game.state, 'actions': list(commands), 'roll': self.server.roll}
 
     def handle_move(self, command):
         message = ''
@@ -285,8 +286,11 @@ class GUI:
                             agent_color = self.server.env.get_opponent_agent()
                             self.server.agent = self.server.agents[agent_color]
                             self.server.roll = None
-
-        return {'message': message, 'state': self.server.env.game.state, 'actions': list(commands)}
+        print("Sending roll:", self.server.roll)
+        return {'message': message, 'state': self.server.env.game.state, 'actions': list(commands), 'roll': self.server.roll}
+    
+    def get_roll(self):
+        return self.server.roll
 
     def run(self):
         print('Starting httpd (http://{}:{})...'.format(self.host, self.port))
