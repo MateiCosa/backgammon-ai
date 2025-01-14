@@ -582,6 +582,31 @@
         let data = {'command':command}
         xhr.send(JSON.stringify(data));
     }
+    
+    function request_roll(callback) {
+    let xhr = new XMLHttpRequest();
+    let url = location.origin;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            let json_data = JSON.parse(xhr.responseText);
+            let message = json_data["message"];
+            let rollMatch = message.match(/Roll=\((\d+),\s*(\d+)\)/);
+            let roll = null;
+
+            if (rollMatch) {
+                roll = [parseInt(rollMatch[1]), parseInt(rollMatch[2])];
+                console.log("Fetched roll from regex is:", roll);
+            }
+            callback(roll);  // Pass the roll to the callback
+        }
+    };
+
+    let data = { 'command': 'roll' };
+    xhr.send(JSON.stringify(data));
+    }
 
     function update(data){
         console.log(data['message'])
@@ -641,8 +666,16 @@
                 buttonNode.innerHTML = action;
                 buttonNode.onclick = function() { 
                     document.getElementById("action-choice").value = buttonNode.innerHTML;
+                    console.log("Button is pressed, roll is: ", roll)
                     if (action === 'roll'){
-                        rollDice(roll)
+                        request_roll(function(roll) {
+                            if (roll) {
+                                rollDice(roll);  // Use the fetched roll
+                                execute_action();  // Continue with action
+                            } else {
+                                console.error("Failed to fetch roll.");
+                            }
+                        });
                     }
                     execute_action()
                 };
