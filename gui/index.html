@@ -590,7 +590,8 @@
         actions = data['actions']
         state = data['state']
         // roll = data['roll']
-        let rollMatch = message.match(/Roll=\(np\.int64\((\d+)\), np\.int64\((\d+)\)\)/);
+        //rollMatch = message.match(/Roll=\(np\.int64\((\d+)\), np\.int64\((\d+)\)\)/);
+        let rollMatch = message.match(/Roll=\((\d+),\s*(\d+)\)/);
         let roll = null;
         if (rollMatch) {
             roll = [parseInt(rollMatch[1]), parseInt(rollMatch[2])];

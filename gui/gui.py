@@ -129,22 +129,24 @@ class GUI:
             self.server.game_started = True
 
             agent_color, self.server.first_roll, observation = self.server.env.reset()
+            self.server.first_roll = (int(self.server.first_roll[0]), int(self.server.first_roll[1]))
             self.server.agent = self.server.agents[agent_color]
 
             if agent_color == WHITE:
-                message += "{} Starts first | Roll={} | Run 'move (src/target)'\n".format(COLORS[self.server.agent.color], (abs(self.server.first_roll[0]), abs(self.server.first_roll[1])))
+                message += "{} Starts first | Roll={} | Run 'move (src/target)'\n".format(COLORS[self.server.agent.color], (abs(int(self.server.first_roll[0])), abs(int(self.server.first_roll[1]))))
                 commands.extend(self.server.env.get_valid_actions(self.server.first_roll))
                 self.server.roll = self.server.first_roll
 
             else:
                 opponent = self.server.agents[agent_color]
-                message += "{} Starts first | Roll={}\n".format(COLORS[opponent.color], (abs(self.server.first_roll[0]), abs(self.server.first_roll[1])))
+                message += "{} Starts first | Roll={}\n".format(COLORS[opponent.color], (abs(int(self.server.first_roll[0])), abs(int(self.server.first_roll[1]))))
 
                 if self.server.first_roll:
                     roll = self.server.first_roll
                     self.server.first_roll = None
                 else:
                     roll = opponent.roll_dice()
+                    self.server.roll = (int(roll[0]), int(roll[1]))
 
                 actions = self.server.env.get_valid_actions(roll)
                 action = opponent.choose_action(actions, self.server.env)
@@ -162,7 +164,7 @@ class GUI:
         commands = []
 
         if self.server.roll is not None:
-            message += "You have already rolled the dice {}. Run 'move (src/target)'\n".format((abs(self.server.roll[0]), abs(self.server.roll[1])))
+            message += "You have already rolled the dice {}. Run 'move (src/target)'\n".format((abs(int(self.server.roll[0])), abs(int(self.server.roll[1]))))
             actions = self.server.env.get_valid_actions(self.server.roll)
             if len(actions) == 0:
                 commands.append('start')
@@ -170,7 +172,7 @@ class GUI:
                 commands.extend(list(actions))
 
         elif self.server.game_finished:
-            message += "The game is finished. Type 'Start' to start a new game\n".format((abs(self.server.roll[0]), abs(self.server.roll[1])))
+            message += "The game is finished. Type 'Start' to start a new game\n".format((abs(int(self.server.roll[0])), abs(int(self.server.roll[1]))))
             commands.append('start')
 
         elif not self.server.game_started:
@@ -179,6 +181,7 @@ class GUI:
 
         else:
             self.server.roll = self.server.agent.roll_dice()
+            self.server.roll = (int(self.server.roll[0]), int(self.server.roll[1]))
 
             message += "{} | Roll={} | Run 'move (src/target)'\n".format(COLORS[self.server.agent.color], (abs(self.server.roll[0]), abs(self.server.roll[1])))
             actions = self.server.env.get_valid_actions(self.server.roll)
