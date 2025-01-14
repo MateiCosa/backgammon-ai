@@ -144,6 +144,12 @@ The `blockade_strength` function iterates through the board and computes the pro
 
 The redefinition of *Blot Exposure* and *Blockade Strength* represents a significant step toward efficient feature engineering for backgammon neural network models. These features strike a balance between computational efficiency and informational richness, making them invaluable for large-scale training and inference. Future work could explore further refinements and assess their impact on model performance in competitive settings.
 
+## GUI Demo
+
+To test the model, run `python main.py` and then, open http://localhost:8002/ in your browser to access the GUI. The following is the GUI demo.
+
+https://github.com/user-attachments/assets/dc75ab88-98c9-4b80-b31a-e2773e227c6e
+
 
 ## References
   
